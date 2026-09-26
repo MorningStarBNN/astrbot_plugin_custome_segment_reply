@@ -70,3 +70,4 @@ Custom Segment Reply 是一个为 AstrBot 打造的**纯本地智能断句系统
   "merge_short_tail": true,    // 开启短尾合并
   "short_tail_threshold": 8    // 当最后一段少于等于8个字时触发合并
 }
+```
