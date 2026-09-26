@@ -67,10 +67,24 @@
         "hint": "程序会优先寻找靠前的符号进行切割。越强的停顿符（如换行、句号）建议放越前面。"
     },
     "keep_symbol": {
-        "description": "分段是否保留标点符号",
-        "type": "bool",
-        "default": true,
-        "hint": "开启则断句后保留该标点（推荐）；关闭则断句后直接丢弃该标点。"
+        "description": "分段保留标点符号的策略",
+        "type": "string",
+        "default": "all",
+        "options": ["all", "none", "list"],
+        "labels": ["全部保留", "全部不保留", "选择性保留"],
+        "hint": "可选择断句后保留该标点，断句后直接丢弃该标点，或断句后仅保留\"保留的断句符号列表\"中的标点"
+    },
+    "keep_symbol_list": {
+        "description": "保留的断句符号列表",
+        "type": "list",
+        "default": [
+            "!",
+            "?",
+            "！",
+            "？",
+            "……"
+        ],
+        "hint": "仅当\"分段保留标点符号的策略\"设为\"选择性保留\"时生效。列表中的符号在断句后会被保留。"
     },
     "extend_to_trailing_symbols": {
         "description": "分段符后顺延连续符号",
