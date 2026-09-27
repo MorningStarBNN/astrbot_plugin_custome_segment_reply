@@ -27,8 +27,6 @@ class CustomSegmentReplyPlugin(Star):
         "\u201c": "\u201d", "\u2018": "\u2019", "<": ">",
     }
 
-    KEEP_SYMBOL_DEFAULT = ["!", "?", "！", "？", "……"]
-
     # ========================= 初始化 =========================
 
     def __init__(self, context: Context, config: AstrBotConfig):
@@ -70,16 +68,15 @@ class CustomSegmentReplyPlugin(Star):
 
         # 符号行为
         raw_keep = cfg.get("keep_symbol", "all")
-        if isinstance(raw_keep, bool):
+        if isinstance(raw_keep, bool):  # 兼容旧版本
             self.keep_symbol_mode = "all" if raw_keep else "none"
         elif isinstance(raw_keep, str):
             mode = raw_keep.strip().lower()
             self.keep_symbol_mode = mode if mode in {"all", "none", "list"} else "all"
         else:
             self.keep_symbol_mode = "all"
-        self.keep_symbol_list = self._parse_symbol_list(
-            cfg.get("keep_symbol_list"), default=self.KEEP_SYMBOL_DEFAULT
-        )
+        self.discard_symbol_list = self._parse_symbol_list(
+            cfg.get("discard_symbol_list"), default=[])
         self.extend_to_trailing_symbols = bool(cfg.get("extend_to_trailing_symbols", True))
         self.protect_paired_symbols = bool(cfg.get("protect_paired_symbols", False))
 
@@ -381,9 +378,9 @@ class CustomSegmentReplyPlugin(Star):
     # ========================= 符号处理工具 =========================
 
     def _should_keep_symbol(self, symbol: str) -> bool:
-        """判断命中的分段符（及其顺延的连续符号）是否保留在段末，模式由 keep_symbol 显式值决定。"""
+        """判断命中的分段符（及其顺延的连续符号）是否保留在段末。"""
         if self.keep_symbol_mode == "list":
-            return symbol in self.keep_symbol_list
+            return symbol not in self.discard_symbol_list
         return self.keep_symbol_mode == "all"
 
     @staticmethod
